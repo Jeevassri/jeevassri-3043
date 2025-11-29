@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Donation Registration - Save a Life!</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* More modern font */
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensure it takes full viewport height */
+
+            /* --- CATCHY BACKGROUND STYLES --- */
+            background-image: url('https://source.unsplash.com/1600x900/?blood,heart,health'); /* Dynamic image of blood/heart/health */
+            background-size: cover; /* Cover the entire viewport */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Don't repeat the image */
+            background-attachment: fixed; /* Keep image fixed when scrolling (though no scroll here) */
+            position: relative; /* Needed for overlay */
+            overflow: hidden; /* Prevent scrollbars if image is slightly larger */
+        }
+
+        /* --- Background Overlay for Readability --- */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Dark semi-transparent overlay */
+            z-index: 0; /* Place behind the content container */
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent white for content */
+            padding: 30px;
+            border-radius: 12px; /* Softer rounded corners */
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3); /* More pronounced shadow */
+            width: 100%;
+            max-width: 450px; /* Slightly wider form */
+            z-index: 1; /* Place above the overlay */
+            position: relative; /* Ensure z-index works */
+            animation: fadeIn 1s ease-out; /* Simple fade-in animation */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #cc0000; /* A stronger blood red */
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 2em; /* Larger heading */
+            letter-spacing: 1px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px; /* More spacing */
+            font-weight: bold;
+            color: #333;
+            }
+
+        input[type="text"],
+        input[type="email"],
+        select {
+            width: 100%;
+            padding: 12px; /* More padding */
+            margin-bottom: 18px; /* More spacing */
+            border: 1px solid #ccc;
+            border-radius: 6px; /* Softer input corners */
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        select:focus {
+            border-color: #cc0000; /* Highlight focus with red */
+            box-shadow: 0 0 8px rgba(204, 0, 0, 0.2);
+            outline: none;
+        }
+        button {
+            background-color: #cc0000;
+            color: white;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1em; /* Larger button text */
+            font-weight: bold;
+            transition: background-color 0.3s ease; /* Smooth hover effect */
+        }
+
+        button:hover {
+            background-color: #990000; /* Darker red on hover */
+        }
+
+        #message {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            display: none;
+            font-weight: bold;
+            animation: slideIn 0.5s ease-out; /* Message slide-in animation */
+        }
+
+        .success {
+            background-color: #e6ffed; /* Lighter green for success */
+            color: #006622;
+            border: 1px solid #00b33c;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>❤️ Donate Blood, Save a Life!</h2>
+    <form id="donationForm">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" required placeholder="John Doe">
+
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" required placeholder="john.doe@example.com">
+
+        <label for="bloodGroup">Blood Group</label>
+        <select id="bloodGroup" name="bloodGroup" required>
+            <option value="">-- Select Your Blood Group --</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+        </select>
+
+        <label for="location">City/Location</label>
+        <input type="text" id="location" name="location" required placeholder="New York City">
+
+        <button type="submit">Register to Donate</button>
+    </form>
+
+    <div id="message"></div>
+</div>
+
+<script>
+    const form = document.getElementById('donationForm');
+    const messageDiv = document.getElementById('message');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        if (!form.checkValidity()) {
+            return;
+        }
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const bloodGroup = document.getElementById('bloodGroup').value;
+        const location = document.getElementById('location').value;
+
+        const donorData = {
+            name: name,
+            email: email,
+            bloodGroup: bloodGroup,
+            location: location
+        };
+
+        console.log('Donor data submitted:', donorData);
+
+        messageDiv.textContent = `Thank you, ${name}! Your registration for blood group ${bloodGroup} in ${location} has been received. You're a hero!`;
+        messageDiv.className = 'success';
+        messageDiv.style.display = 'block';
+
+        form.reset();
+    });
+</script>
+
+</body>
+</html>
